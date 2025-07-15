@@ -1,105 +1,58 @@
 import { Box, Typography, useMediaQuery } from "@mui/material";
 import { ResponsivePie } from "@nivo/pie";
 import { ResponsiveBar } from "@nivo/bar";
+import { useEffect, useState } from "react";
+import { getPieChartData } from "../../services/admin/pie-chart";
+import { use } from "react";
 const AdminDashboard = () => {
   const isMobile = useMediaQuery("(max-width:600px)");
-  const data = [
+  const [pieData, setPieData] = useState([]);
+  const [totalTasks, setTotalTasks] = useState(0);
+  const [pendingCount, setPendingCount] = useState(0);
+  const [inProgressCount, setInProgressCount] = useState(0);
+  const [completedCount, setCompletedCount] = useState(0);
+  useEffect(() => {
+    const getData = async () => {
+      console.log("Fetching pie chart data...");
+      try {
+        const response = await getPieChartData();
+        const chartData = response.data.data;
+        setPieData(chartData);
+        setTotalTasks(response.data.totalTasks);
+        const pending =
+          chartData.find((item) => item.id === "pending")?.value || 0;
+        const inProgress =
+          chartData.find((item) => item.id === "in-progress")?.value || 0;
+        const completed =
+          chartData.find((item) => item.id === "completed")?.value || 0;
+
+        // Optionally save to state if needed
+        setPendingCount(pending);
+        setInProgressCount(inProgress);
+        setCompletedCount(completed);
+      } catch (error) {
+        console.error("Error fetching pie chart data:", error);
+        setPieData([]);
+      }
+    };
+    getData();
+  }, []);
+
+  const barChart = [
     {
-      id: "lisp",
-      label: "lisp",
-      value: 217,
-      color: "hsl(244, 70%, 50%)",
+      status: "Pending",
+      pending: pendingCount,
     },
     {
-      id: "ruby",
-      label: "ruby",
-      value: 239,
-      color: "hsl(60, 70%, 50%)",
+      status: "In-Progress",
+      inProgress: inProgressCount,
     },
     {
-      id: "php",
-      label: "php",
-      value: 180,
-      color: "hsl(296, 70%, 50%)",
-    },
-    {
-      id: "rust",
-      label: "rust",
-      value: 482,
-      color: "hsl(109, 70%, 50%)",
-    },
-    {
-      id: "python",
-      label: "python",
-      value: 121,
-      color: "hsl(151, 70%, 50%)",
-    },
-  ];
-  const data2 = [
-    {
-      country: "AD",
-      "hot dog": 48,
-      burger: 86,
-      sandwich: 159,
-      kebab: 139,
-      fries: 126,
-      donut: 23,
-    },
-    {
-      country: "AE",
-      "hot dog": 0,
-      burger: 133,
-      sandwich: 67,
-      kebab: 156,
-      fries: 167,
-      donut: 61,
-    },
-    {
-      country: "AF",
-      "hot dog": 173,
-      burger: 149,
-      sandwich: 106,
-      kebab: 72,
-      fries: 112,
-      donut: 0,
-    },
-    {
-      country: "AG",
-      "hot dog": 184,
-      burger: 65,
-      sandwich: 134,
-      kebab: 27,
-      fries: 103,
-      donut: 109,
-    },
-    {
-      country: "AI",
-      "hot dog": 189,
-      burger: 41,
-      sandwich: 155,
-      kebab: 93,
-      fries: 73,
-      donut: 79,
-    },
-    {
-      country: "AL",
-      "hot dog": 8,
-      burger: 59,
-      sandwich: 176,
-      kebab: 163,
-      fries: 174,
-      donut: 28,
-    },
-    {
-      country: "AM",
-      "hot dog": 6,
-      burger: 147,
-      sandwich: 0,
-      kebab: 174,
-      fries: 176,
-      donut: 109,
+      status: "Completed",
+      completed: completedCount,
     },
   ];
+  console.log("Bar Chart Data:", barChart);
   return (
     <Box>
       {/* Top Bar */}
@@ -134,10 +87,10 @@ const AdminDashboard = () => {
             width: "100%",
           }}
         >
-          <Box>📌 Total: 1</Box>
-          <Box>⏳ Pending: 2</Box>
-          <Box>🔄 In-Progress: 3</Box>
-          <Box>✅ Completed: 4</Box>
+          <Box>📌 Total: {totalTasks}</Box>
+          <Box>⏳ Pending: {pendingCount}</Box>
+          <Box>🔄 In-Progress: {inProgressCount}</Box>
+          <Box>✅ Completed: {completedCount}</Box>
         </Box>
       </Box>
 
@@ -166,7 +119,7 @@ const AdminDashboard = () => {
             Task Overview
           </Typography>
           <ResponsivePie
-            data={data}
+            data={pieData}
             margin={{ top: 10, right: 80, bottom: 10, left: 10 }}
             innerRadius={0.5}
             padAngle={0.6}
@@ -200,21 +153,21 @@ const AdminDashboard = () => {
             borderTop: "1px solid #eee",
             flex: 1,
             minWidth: isMobile ? "100%" : "400px",
-            height: "400px",
+            height: "500px",
           }}
         >
           <Typography variant="h6" mb={2}>
             Priority Breakdown
           </Typography>
           <ResponsiveBar
-            data={data2}
-            indexBy="country"
-            keys={["hot dog", "burger", "sandwich", "kebab", "fries", "donut"]} // make sure you pass this
+            data={barChart}
+            indexBy="status"
+            keys={["pending", "inProgress", "completed"]} // make sure you pass this
             groupMode="grouped"
             margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
             padding={0.3}
             axisBottom={{
-              legend: "Country",
+              legend: "Status",
               legendPosition: "middle",
               legendOffset: 32,
             }}
