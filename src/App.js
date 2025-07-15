@@ -20,6 +20,7 @@ import ViewEmployee from "./pages/admin/view-employee";
 import { CheckUserAuth } from "./store/action/auth";
 import { useEffect } from "react";
 import { Box, CircularProgress } from "@mui/material";
+import Logout from "./components/logout";
 function App() {
   const { user, isAuthenticated, isLoading } = useSelector(
     (state) => state.auth
@@ -51,7 +52,7 @@ function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<AuthLogin />} />
         <Route path="/verify-email/:token" element={<VerifyEmail />} />
         <Route
           path="/auth"
@@ -77,7 +78,7 @@ function App() {
           <Route path="view-tasks" element={<ViewTask />} />
           <Route path="emp-create" element={<CreateEmployee />} />
           <Route path="view-emp" element={<ViewEmployee />} />
-          <Route path="logout" element={<AdminDashboard />} />
+          <Route path="logout" element={<Logout />} />
         </Route>
         <Route
           path="/employee"
@@ -89,6 +90,7 @@ function App() {
         >
           <Route path="dashboard" element={<EmployeeDashboard />} />
           <Route path="tasks" element={<EmployeeTask />} />
+          <Route path="logout" element={<Logout />} />
         </Route>
       </Routes>
     </div>
