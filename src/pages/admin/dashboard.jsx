@@ -25,8 +25,6 @@ const AdminDashboard = () => {
           chartData.find((item) => item.id === "in-progress")?.value || 0;
         const completed =
           chartData.find((item) => item.id === "completed")?.value || 0;
-
-        // Optionally save to state if needed
         setPendingCount(pending);
         setInProgressCount(inProgress);
         setCompletedCount(completed);

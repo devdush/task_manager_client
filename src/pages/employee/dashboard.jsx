@@ -163,7 +163,7 @@ const EmployeeDashboard = () => {
           <ResponsiveBar
             data={barChart}
             indexBy="status"
-            keys={["pending", "inProgress", "completed"]} // make sure you pass this
+            keys={["pending", "inProgress", "completed"]}
             groupMode="grouped"
             margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
             padding={0.3}

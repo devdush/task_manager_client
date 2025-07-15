@@ -91,11 +91,10 @@ const AdminLayout = () => {
       }}
     >
       <DashboardLayout>
-        {/* <Typography>Dashboard content for {pathname}</Typography> */}
         <Outlet />
       </DashboardLayout>
     </AppProvider>
-    // preview-end
+ 
   );
 };
 
