@@ -1,13 +1,34 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { BrowserRouter } from "react-router-dom";
+import { Provider } from "react-redux";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+import { thunk } from "redux-thunk";
+import {
+  applyMiddleware,
+  combineReducers,
+  createStore,
+} from "@reduxjs/toolkit";
+import authLoginReducer from "./store/reducer/auth";
+const rootReducer = combineReducers({
+  auth: authLoginReducer,
+});
+const store = createStore(rootReducer, applyMiddleware(thunk));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+        <ToastContainer />
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>
 );
 
