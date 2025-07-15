@@ -1,6 +1,6 @@
 import logo from "./logo.svg";
 import "./App.css";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import CheckAuth from "./components/check-auth";
 import Home from "./pages/home/layout";
 import { useDispatch, useSelector } from "react-redux";
@@ -52,8 +52,8 @@ function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<AuthLogin />} />
-        <Route path="/verify-email/:token" element={<VerifyEmail />} />
+         <Route path="/" element={<Navigate to="/auth/login" replace />} />
+
         <Route
           path="/auth"
           element={
@@ -65,6 +65,7 @@ function App() {
           <Route path="login" element={<AuthLogin />} />
           <Route path="register" element={<AuthRegister />} />
         </Route>
+        <Route path="/verify-email/:token" element={<VerifyEmail />} />
         <Route
           path="/admin"
           element={
